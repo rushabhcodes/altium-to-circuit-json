@@ -28,10 +28,20 @@ test("repro: a linked polygon cutout removes the copper pour", async () => {
   await expect(comparisonSvg).toMatchSvgSnapshot(import.meta.path)
 })
 
-test.failing("a polygon cutout preserves its parent copper pour", () => {
+test.failing("a polygon cutout preserves its parent copper pour", async () => {
   const circuitJson = convertAltiumPcbDocToCircuitJson(document)
   const copperPours = circuitJson.filter(
     (element) => element.type === "pcb_copper_pour",
+  )
+
+  const comparisonSvg = stackAltiumAndCircuitJsonSvgs({
+    altiumSvg: serializeAltiumPcbToSvg(document),
+    circuitJsonSvg: convertCircuitJsonToPcbSvg(circuitJson),
+    label: "Polygon cutout drops its parent copper pour",
+  })
+  await expect(comparisonSvg).toMatchSvgSnapshot(
+    import.meta.path,
+    "polygon-cutout-drops-parent-pour",
   )
 
   expect(copperPours).toHaveLength(1)
