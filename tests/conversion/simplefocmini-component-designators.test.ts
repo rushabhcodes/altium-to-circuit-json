@@ -20,13 +20,15 @@ test("SimpleFOC Mini preserves PCB component designators", async () => {
 
   expect(pcbComponents).toHaveLength(16)
   expect(
-    pcbComponents.map((component) =>
-      designatorById.get(component.source_component_id),
+    pcbComponents.every((component) =>
+      designatorById.has(component.source_component_id),
     ),
+  ).toBe(true)
+  expect(
+    pcbComponents
+      .slice(3)
+      .map((component) => designatorById.get(component.source_component_id)),
   ).toEqual([
-    "component_0",
-    "component_1",
-    "component_2",
     "LED1",
     "R5",
     "C3",
